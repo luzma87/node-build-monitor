@@ -6,7 +6,10 @@ block scripts
     script(data-main="scripts/main", src='scripts/libs/require-2.1.15.min.js')
 
 block content
-    .full-size(data-bind='component: { name: options.theme(), params: { builds: builds } }, changeFavicon: faviconImageUrl')
+  div(data-bind='if: isAllSuccess(), css: { "full-size": isAllSuccess() }')
+    h1(style={color: 'red', background: 'green', padding: 8}) SUCCESS
+  div(data-bind='ifnot: isAllSuccess(), css: { "full-size": !isAllSuccess() }')
+    div(data-bind='component: { name: options.theme(), params: { builds: builds } }, changeFavicon: faviconImageUrl')
 
     include options.pug
     include overlay.pug

@@ -8,7 +8,7 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
         this.infoType = ko.observable();
         this.faviconImageUrl = ko.observable('images/favicon-unread.png');
         this.builds = ko.observableArray([]);
-        this.hasNonGreens = ko.observable(true);
+        this.isAllSuccess = ko.observable(true);
         this.version = ko.observable();
         this.options = new OptionsViewModel(self);
 
@@ -70,11 +70,9 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
 
         this.loadBuilds = function (builds) {
             self.builds.removeAll();
-            console.log({builds});
             if (self.options.attentionOnly()) {
               var nonSuccessfulBuilds = builds.filter(b=>b.statusText !== 'Success');
-              self.hasNonGreens(nonSuccessfulBuilds.length > 0);
-              console.log({nonSuccessfulBuilds});
+              self.isAllSuccess(nonSuccessfulBuilds.length === 0);
               nonSuccessfulBuilds.forEach(function (build) {
                 self.builds.push(new BuildViewModel(build));
               });
@@ -83,7 +81,6 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                 self.builds.push(new BuildViewModel(build));
               });
             }
-            console.log(this);
         };
 
         this.updateCurrentBuildsWithChanges = function (changes)  {
