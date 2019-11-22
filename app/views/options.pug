@@ -26,6 +26,14 @@ div(data-bind='with: options')
             .clear
 
             section
+                h1 Show only builds needing attention
+                .description Don't show successful builds
+
+                label.checkbox
+                    input(type='checkbox', data-bind='checked: attentionOnly')
+                    span Don't show greens
+
+            section
                 h1 Notification on build failure
                 .description With enabled notifications you can leave the build monitor open in the background and never miss a failed build again.
 

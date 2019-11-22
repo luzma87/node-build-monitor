@@ -154,7 +154,37 @@ module.exports = function () {
                     }
                 }
             }
-
+            return "Unknown";
+        },
+        getCommitsBy = function (build) {
+          if(build.culprits) {
+            var culprits = [];
+            for (var i = 0; i < build.culprits.length; i++) {
+              var culprit = build.culprits[i];
+              if ((culprit) && (culprit.fullName)) {
+                culprits.push(culprit.fullName);
+              }
+            }
+            if(culprits.length > 0) return culprits.join(", ");
+          }
+          return "No one";
+        },
+        getCause = function (build) {
+            if(build.actions) {
+              var causes = [];
+              for (var i = 0; i < build.actions.length; i++) {
+                var action = build.actions[i];
+                if ((action) && (action.causes)) {
+                  for (var j = 0; j < action.causes.length; j++) {
+                    var cause = action.causes[j];
+                    if(cause && cause.shortDescription) {
+                      causes.push(cause.shortDescription);
+                    }
+                  }
+                }
+              }
+              if(causes.length > 0) return causes.join(", ");
+            }
             return "Unknown";
         },
         simplifyBuild = function (res) {
@@ -166,6 +196,8 @@ module.exports = function () {
                 startedAt: parseDate(res.timestamp),
                 finishedAt: parseDate(res.timestamp + res.duration),
                 requestedFor: getRequestedFor(res),
+                commitsBy: getCommitsBy(res),
+                cause: getCause(res),
                 status: getStatus(res),
                 statusText: getStatusText(res),
                 reason: "Build",

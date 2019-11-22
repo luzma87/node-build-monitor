@@ -17,6 +17,8 @@ define(['ko', 'moment', 'countdown'], function (ko, moment, countdown) {
         this.statusText = ko.observable();
         this.reason = ko.observable();
         this.requestedFor = ko.observable();
+        this.commitsBy = ko.observable();
+        this.cause = ko.observable();
         this.hasWarnings = ko.observable();
         this.hasErrors = ko.observable();
         this.url = ko.observable();
@@ -37,6 +39,8 @@ define(['ko', 'moment', 'countdown'], function (ko, moment, countdown) {
             this.statusText(build.statusText);
             this.reason(build.reason);
             this.requestedFor(build.requestedFor);
+            this.commitsBy(build.commitsBy);
+            this.cause(build.cause);
             this.hasWarnings(build.hasWarnings);
             this.hasErrors(build.hasErrors);
             this.url(build.url);

@@ -5,10 +5,11 @@ define(['ko', 'helper', 'settings', 'notification'], function (ko, helper, setti
         self.isMenuVisible = ko.observable(false);
         self.isMenuButtonVisible = ko.observable(false);
         self.theme = ko.observable(helper.getUrlParameter('theme') || settings.theme);
-        self.themes = ko.observableArray(['default', 'stoplight', 'list', 'lingo', 'lowres', 'minimal', 'twenty', 'twentyfive']);
+        self.themes = ko.observableArray(['default', 'stoplight', 'list', 'lingo', 'lowres', 'minimal', 'twenty', 'twentyfive', 'pepe']);
         self.browserNotificationSupported = ko.observable(notification.isSupportedAndNotDenied());
         self.browserNotificationEnabled = ko.observable(notification.isSupportedAndNotDenied() && settings.browserNotificationEnabled);
         self.soundNotificationEnabled = ko.observable(settings.soundNotificationEnabled);
+        self.attentionOnly = ko.observable(settings.attentionOnly);
         self.notificationFilterEnabled = ko.observable(settings.notificationFilterEnabled);
         self.notificationFilterValue = ko.observable(settings.notificationFilterValue);
         self.version = app.version;
@@ -53,6 +54,10 @@ define(['ko', 'helper', 'settings', 'notification'], function (ko, helper, setti
 
         self.soundNotificationEnabled.subscribe(function (enabled) {
             settings.soundNotificationEnabled = enabled;
+        });
+
+        self.attentionOnly.subscribe(function (enabled) {
+            settings.attentionOnly = enabled;
         });
 
         self.notificationFilterEnabled.subscribe(function (enabled) {

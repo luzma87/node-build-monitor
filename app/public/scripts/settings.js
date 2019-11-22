@@ -23,6 +23,12 @@ define(['cookies'], function (cookies) {
         enumerable: true
     });
 
+    Object.defineProperty(settings, 'attentionOnly', {
+        get: function() { return parseBool(cookies.get('attentionOnly')) || false; },
+        set: function(value) { cookies.set('attentionOnly', value); },
+        enumerable: true
+    });
+
     Object.defineProperty(settings, 'notificationFilterEnabled', {
         get: function() { return parseBool(cookies.get('notificationFilterEnabled')) || false; },
         set: function(value) { cookies.set('notificationFilterEnabled', value); },

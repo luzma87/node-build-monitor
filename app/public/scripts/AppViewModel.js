@@ -8,6 +8,7 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
         this.infoType = ko.observable();
         this.faviconImageUrl = ko.observable('images/favicon-unread.png');
         this.builds = ko.observableArray([]);
+        this.hasNonGreens = ko.observable(true);
         this.version = ko.observable();
         this.options = new OptionsViewModel(self);
 
@@ -69,10 +70,20 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
 
         this.loadBuilds = function (builds) {
             self.builds.removeAll();
-
-            builds.forEach(function (build) {
+            console.log({builds});
+            if (self.options.attentionOnly()) {
+              var nonSuccessfulBuilds = builds.filter(b=>b.statusText !== 'Success');
+              self.hasNonGreens(nonSuccessfulBuilds.length > 0);
+              console.log({nonSuccessfulBuilds});
+              nonSuccessfulBuilds.forEach(function (build) {
                 self.builds.push(new BuildViewModel(build));
-            });
+              });
+            } else {
+              builds.forEach(function (build) {
+                self.builds.push(new BuildViewModel(build));
+              });
+            }
+            console.log(this);
         };
 
         this.updateCurrentBuildsWithChanges = function (changes)  {
@@ -98,7 +109,7 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
 
                 if (build.status === 'Red' && matchesToNotificationFilter(build)) {
                     if (self.options.soundNotificationEnabled()) {
-                        var audio = new Audio('/audio/woop.mp3');
+                        var audio = new Audio('/audio/build_brakes.mp3');
                         audio.play();
                     }
 
