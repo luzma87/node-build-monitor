@@ -70,14 +70,16 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
 
         this.loadBuilds = function (builds) {
             self.builds.removeAll();
-          if (self.options.attentionOnly()) {
-              for(var i = 0; i < builds.length; i++) {
-                var build = builds[i];
+          if (self.options.showOnlyNonSuccess()) {
+              var nonGreenBuilds = 0;
+              for(var i = 0; i < self.builds.length; i++) {
+                var build = self.builds[i];
                 if(build.statusText !== 'Success') {
-                  self.isAllSuccess(false);
+                  nonGreenBuilds += 1;
                   self.builds.push(new BuildViewModel(build));
                 }
               }
+              self.isAllSuccess(nonGreenBuilds  === 0);
             } else {
               self.isAllSuccess(false);
               builds.forEach(function (build) {
@@ -97,6 +99,15 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                 self.builds.remove(function (item) {
                     return item.id() === build.id;
                 });
+                if (self.options.showOnlyNonSuccess()) {
+                  var nonGreenBuilds = 0;
+                  for (var i = 0; i < self.builds.length; i++) {
+                    if (self.builds[i].statusText !== 'Success') {
+                      nonGreenBuilds += 1;
+                    }
+                  }
+                  self.isAllSuccess(nonGreenBuilds === 0);
+                }
             });
 
             changes.added.forEach(function (build, index) {
@@ -108,17 +119,17 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                 var vm = getBuildById(build.id);
                 vm.update(build);
 
-                if (build.status === 'Green') {
-                  self.builds.remove(function (item) {
-                    return item.id() === build.id;
-                  });
-                  var nonGreenBuilds = 0;
-                  for(var i = 0; i < self.builds.length; i++) {
-                    if(self.builds[i].statusText !== 'Success') {
-                      nonGreenBuilds += 1;
+                if (self.options.showOnlyNonSuccess() && build.status === 'Green') {
+                    self.builds.remove(function (item) {
+                      return item.id() === build.id;
+                    });
+                    var nonGreenBuilds = 0;
+                    for (var i = 0; i < self.builds.length; i++) {
+                      if (self.builds[i].statusText !== 'Success') {
+                        nonGreenBuilds += 1;
+                      }
                     }
-                  }
-                  self.isAllSuccess(nonGreenBuilds  === 0);
+                    self.isAllSuccess(nonGreenBuilds === 0);
                 }
 
                 if (build.status === 'Red' && matchesToNotificationFilter(build)) {

@@ -23,9 +23,9 @@ define(['cookies'], function (cookies) {
         enumerable: true
     });
 
-    Object.defineProperty(settings, 'attentionOnly', {
-        get: function() { return parseBool(cookies.get('attentionOnly')) || false; },
-        set: function(value) { cookies.set('attentionOnly', value); },
+    Object.defineProperty(settings, 'showOnlyNonSuccess', {
+        get: function() { return parseBool(cookies.get('showOnlyNonSuccess')) || false; },
+        set: function(value) { cookies.set('showOnlyNonSuccess', value); },
         enumerable: true
     });
 

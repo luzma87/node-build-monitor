@@ -9,7 +9,7 @@ define(['ko', 'helper', 'settings', 'notification'], function (ko, helper, setti
         self.browserNotificationSupported = ko.observable(notification.isSupportedAndNotDenied());
         self.browserNotificationEnabled = ko.observable(notification.isSupportedAndNotDenied() && settings.browserNotificationEnabled);
         self.soundNotificationEnabled = ko.observable(settings.soundNotificationEnabled);
-        self.attentionOnly = ko.observable(settings.attentionOnly);
+        self.showOnlyNonSuccess = ko.observable(settings.showOnlyNonSuccess);
         self.notificationFilterEnabled = ko.observable(settings.notificationFilterEnabled);
         self.notificationFilterValue = ko.observable(settings.notificationFilterValue);
         self.version = app.version;
@@ -56,8 +56,8 @@ define(['ko', 'helper', 'settings', 'notification'], function (ko, helper, setti
             settings.soundNotificationEnabled = enabled;
         });
 
-        self.attentionOnly.subscribe(function (enabled) {
-            settings.attentionOnly = enabled;
+        self.showOnlyNonSuccess.subscribe(function (enabled) {
+            settings.showOnlyNonSuccess = enabled;
         });
 
         self.notificationFilterEnabled.subscribe(function (enabled) {
