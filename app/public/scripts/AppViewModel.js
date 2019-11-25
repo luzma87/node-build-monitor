@@ -101,11 +101,25 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
 
             changes.added.forEach(function (build, index) {
                 self.builds.splice(index, 0, new BuildViewModel(build));
+                self.isAllSuccess(false);
             });
 
             changes.updated.forEach(function (build) {
                 var vm = getBuildById(build.id);
                 vm.update(build);
+
+                if (build.status === 'Green') {
+                  self.builds.remove(function (item) {
+                    return item.id() === build.id;
+                  });
+                  var nonGreenBuilds = 0;
+                  for(var i = 0; i < self.builds.length; i++) {
+                    if(self.builds[i].statusText !== 'Success') {
+                      nonGreenBuilds += 1;
+                    }
+                  }
+                  self.isAllSuccess(nonGreenBuilds  === 0);
+                }
 
                 if (build.status === 'Red' && matchesToNotificationFilter(build)) {
                     if (self.options.soundNotificationEnabled()) {
@@ -123,7 +137,7 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                 var build = getBuildById(id);
                 var from = self.builds.indexOf(build);
 
-                if (from !== index) {
+                if (self.builds.length > 0 && from !== index) {
                     self.builds.splice(index, 0, self.builds.splice(from, 1)[0]);
                 }
             });
