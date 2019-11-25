@@ -11,5 +11,5 @@ block content
   div(data-bind='ifnot: isAllSuccess(), css: { "full-size": !isAllSuccess() }')
     div(data-bind='component: { name: options.theme(), params: { builds: builds } }, changeFavicon: faviconImageUrl')
 
-    include options.pug
-    include overlay.pug
+  include options.pug
+  include overlay.pug

@@ -27,11 +27,11 @@ div(data-bind='with: options')
 
             section
                 h1 Show only builds needing attention
-                .description Don't show successful builds
+                .description
 
                 label.checkbox
                     input(type='checkbox', data-bind='checked: attentionOnly')
-                    span Don't show greens
+                    span Show all builds
 
             section
                 h1 Notification on build failure

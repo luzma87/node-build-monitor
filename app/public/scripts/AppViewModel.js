@@ -70,13 +70,16 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
 
         this.loadBuilds = function (builds) {
             self.builds.removeAll();
-            if (self.options.attentionOnly()) {
-              var nonSuccessfulBuilds = builds.filter(b=>b.statusText !== 'Success');
-              self.isAllSuccess(nonSuccessfulBuilds.length === 0);
-              nonSuccessfulBuilds.forEach(function (build) {
-                self.builds.push(new BuildViewModel(build));
-              });
+          if (self.options.attentionOnly()) {
+              for(var i = 0; i < builds.length; i++) {
+                var build = builds[i];
+                if(build.statusText !== 'Success') {
+                  self.isAllSuccess(false);
+                  self.builds.push(new BuildViewModel(build));
+                }
+              }
             } else {
+              self.isAllSuccess(false);
               builds.forEach(function (build) {
                 self.builds.push(new BuildViewModel(build));
               });
