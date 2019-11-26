@@ -1,10 +1,21 @@
-- var rootFolder = 'successImages'
--
+script(type='text/javascript').
+  var rootFolder = 'successImages'
   var imgs = [
-    `${rootFolder}/img1.jpeg`,
-    `${rootFolder}/img2.gif`
+    `${rootFolder}/cat_success.jpeg`,
+    `${rootFolder}/nyan.gif`
   ]
-- var img = imgs[Math.floor(Math.random() * imgs.length)]
+
+  function setRandomImage() {
+    var img = imgs[Math.floor(Math.random() * imgs.length)];
+    $("#successImage").attr("src", img);
+  }
+
+  setRandomImage();
+  $(document).ready(function(){
+    setInterval (function() {
+     setRandomImage();
+    }, 5000 );
+  });
 
 .success-container
-  img(src=img)
+  img#successImage
