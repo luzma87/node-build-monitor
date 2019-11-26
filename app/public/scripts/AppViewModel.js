@@ -35,6 +35,26 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
             }
         };
 
+      var shouldShowOnlyNonSuccess = function () {
+        return self.options.showOnlyNonSuccess();
+      };
+
+        var getNonSuccessfulBuilds = function () {
+          var nonGreenBuilds = [];
+          for (var i = 0; i < self.builds.length; i++) {
+            var build = self.builds[i];
+            if (build.statusText !== 'Success') {
+              nonGreenBuilds.push(build);
+            }
+          }
+          return nonGreenBuilds;
+        };
+
+        var hasNonSuccessfulBuilds = function () {
+          var nonGreenBuilds = getNonSuccessfulBuilds();
+          return nonGreenBuilds.length === 0;
+        };
+
         var getBuildById = function (id) {
             return self.builds().filter(function (build) {
                 return build.id() === id;
@@ -68,18 +88,12 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
             });
         };
 
-        this.loadBuilds = function (builds) {
+      this.loadBuilds = function (builds) {
             self.builds.removeAll();
-          if (self.options.showOnlyNonSuccess()) {
-              var nonGreenBuilds = 0;
-              for(var i = 0; i < self.builds.length; i++) {
-                var build = self.builds[i];
-                if(build.statusText !== 'Success') {
-                  nonGreenBuilds += 1;
-                  self.builds.push(new BuildViewModel(build));
-                }
-              }
-              self.isAllSuccess(nonGreenBuilds  === 0);
+          if (shouldShowOnlyNonSuccess()) {
+              var nonSuccessfulBuilds = getNonSuccessfulBuilds();
+              ko.utils.arrayPushAll(self.builds, nonSuccessfulBuilds);
+              self.isAllSuccess(nonSuccessfulBuilds.length  === 0);
             } else {
               self.isAllSuccess(false);
               builds.forEach(function (build) {
@@ -99,37 +113,28 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                 self.builds.remove(function (item) {
                     return item.id() === build.id;
                 });
-                if (self.options.showOnlyNonSuccess()) {
-                  var nonGreenBuilds = 0;
-                  for (var i = 0; i < self.builds.length; i++) {
-                    if (self.builds[i].statusText !== 'Success') {
-                      nonGreenBuilds += 1;
-                    }
-                  }
-                  self.isAllSuccess(nonGreenBuilds === 0);
+                if (shouldShowOnlyNonSuccess()) {
+                  self.isAllSuccess(hasNonSuccessfulBuilds());
                 }
             });
 
             changes.added.forEach(function (build, index) {
-                self.builds.splice(index, 0, new BuildViewModel(build));
-                self.isAllSuccess(false);
+                if ((shouldShowOnlyNonSuccess() && build.status !== 'Green')
+                  || !shouldShowOnlyNonSuccess()) {
+                  self.builds.splice(index, 0, new BuildViewModel(build));
+                  self.isAllSuccess(false);
+                }
             });
 
             changes.updated.forEach(function (build) {
                 var vm = getBuildById(build.id);
                 vm.update(build);
 
-                if (self.options.showOnlyNonSuccess() && build.status === 'Green') {
+                if (shouldShowOnlyNonSuccess() && build.status === 'Green') {
                     self.builds.remove(function (item) {
                       return item.id() === build.id;
                     });
-                    var nonGreenBuilds = 0;
-                    for (var i = 0; i < self.builds.length; i++) {
-                      if (self.builds[i].statusText !== 'Success') {
-                        nonGreenBuilds += 1;
-                      }
-                    }
-                    self.isAllSuccess(nonGreenBuilds === 0);
+                    self.isAllSuccess(hasNonSuccessfulBuilds());
                 }
 
                 if (build.status === 'Red' && matchesToNotificationFilter(build)) {
