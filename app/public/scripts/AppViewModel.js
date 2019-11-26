@@ -88,6 +88,18 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
             });
         };
 
+        var shouldAddBuild = function (build) {
+          return (shouldShowOnlyNonSuccess() && build.statusText !== 'Success') || !shouldShowOnlyNonSuccess();
+        };
+
+        var shouldRemoveUpdatedBuild = function (build) {
+          return shouldShowOnlyNonSuccess() && build.statusText === 'Success';
+        };
+
+        var shouldNotifyBuild = function (build) {
+          return build.statusText === 'Failed' && matchesToNotificationFilter(build);
+        };
+
       this.loadBuilds = function (builds) {
             self.builds.removeAll();
           if (shouldShowOnlyNonSuccess()) {
@@ -119,8 +131,7 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
             });
 
             changes.added.forEach(function (build, index) {
-                if ((shouldShowOnlyNonSuccess() && build.status !== 'Green')
-                  || !shouldShowOnlyNonSuccess()) {
+                if (shouldAddBuild(build)) {
                   self.builds.splice(index, 0, new BuildViewModel(build));
                   self.isAllSuccess(false);
                 }
@@ -130,14 +141,14 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                 var vm = getBuildById(build.id);
                 vm.update(build);
 
-                if (shouldShowOnlyNonSuccess() && build.status === 'Green') {
+                if (shouldRemoveUpdatedBuild(build)) {
                     self.builds.remove(function (item) {
                       return item.id() === build.id;
                     });
                     self.isAllSuccess(hasNonSuccessfulBuilds());
                 }
 
-                if (build.status === 'Red' && matchesToNotificationFilter(build)) {
+                if (shouldNotifyBuild(build)) {
                     if (self.options.soundNotificationEnabled()) {
                         var audio = new Audio('/audio/build_brakes.mp3');
                         audio.play();
