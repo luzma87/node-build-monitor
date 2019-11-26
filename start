@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+normal_fg=$(tput sgr0)
+text_fg=$(tput setaf 045)
+question_fg=$(tput setaf 135)
+
+echo "${text_fg}...Starting Jenkins Build monitor...${normal_fg}"
+read -p "${question_fg}Enter your Jenkins username:${normal_fg} "  username
+read -s -p "${question_fg}Enter your Jenkins password:${normal_fg} " password
+echo ""
+echo ""
+
+export IA_JENKINS_USER=$username
+export IA_JENKINS_PASS=$password
+node app/app.js
