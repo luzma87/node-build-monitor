@@ -7,7 +7,7 @@ block scripts
 
 block content
   div(data-bind='if: isAllSuccess(), css: { "full-size": isAllSuccess() }')
-    h1(style={color: 'red', background: 'green', padding: 8}) SUCCESS
+    include success.pug
   div(data-bind='ifnot: isAllSuccess(), css: { "full-size": !isAllSuccess() }')
     div(data-bind='component: { name: options.theme(), params: { builds: builds } }, changeFavicon: faviconImageUrl')
 
