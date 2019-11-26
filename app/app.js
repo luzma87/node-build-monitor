@@ -56,7 +56,9 @@ app.set('view engine', 'pug');
 app.use(morgan('combined', { skip: (req, res) => res.statusCode < 400 }));
 app.get('/', function(req, res) {
     res.render('index', {
-        title: 'Build Monitor'
+        title: 'Build Monitor',
+        files: JSON.stringify(fs.readdirSync('./app/public/successImages')
+        .filter(file => file !== '.empty').map(file => `successImages/${file}`))
     });
 });
 app.get('/health', function(req, res) {

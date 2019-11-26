@@ -39,10 +39,10 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
         return self.options.showOnlyNonSuccess();
       };
 
-        var getNonSuccessfulBuilds = function () {
+        var getNonSuccessfulBuilds = function (buildArray) {
           var nonGreenBuilds = [];
-          for (var i = 0; i < self.builds.length; i++) {
-            var build = self.builds[i];
+          for (var i = 0; i < buildArray.length; i++) {
+            var build = buildArray[i];
             if (build.statusText !== 'Success') {
               nonGreenBuilds.push(build);
             }
@@ -50,8 +50,8 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
           return nonGreenBuilds;
         };
 
-        var hasNonSuccessfulBuilds = function () {
-          var nonGreenBuilds = getNonSuccessfulBuilds();
+        var hasNonSuccessfulBuilds = function (buildArray) {
+          var nonGreenBuilds = getNonSuccessfulBuilds(buildArray);
           return nonGreenBuilds.length === 0;
         };
 
@@ -103,8 +103,9 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
       this.loadBuilds = function (builds) {
             self.builds.removeAll();
           if (shouldShowOnlyNonSuccess()) {
-              var nonSuccessfulBuilds = getNonSuccessfulBuilds();
-              ko.utils.arrayPushAll(self.builds, nonSuccessfulBuilds);
+              var nonSuccessfulBuilds = getNonSuccessfulBuilds(builds);
+              var a = nonSuccessfulBuilds.map(b => new BuildViewModel(b));
+              ko.utils.arrayPushAll(self.builds, a);
               self.isAllSuccess(nonSuccessfulBuilds.length  === 0);
             } else {
               self.isAllSuccess(false);
@@ -126,7 +127,7 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                     return item.id() === build.id;
                 });
                 if (shouldShowOnlyNonSuccess()) {
-                  self.isAllSuccess(hasNonSuccessfulBuilds());
+                  self.isAllSuccess(hasNonSuccessfulBuilds(self.builds()));
                 }
             });
 
@@ -145,7 +146,7 @@ define(['ko', 'notification', 'BuildViewModel', 'OptionsViewModel'], function (k
                     self.builds.remove(function (item) {
                       return item.id() === build.id;
                     });
-                    self.isAllSuccess(hasNonSuccessfulBuilds());
+                    self.isAllSuccess(hasNonSuccessfulBuilds(self.builds()));
                 }
 
                 if (shouldNotifyBuild(build)) {

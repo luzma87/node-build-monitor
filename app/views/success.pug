@@ -1,20 +1,17 @@
 script(type='text/javascript').
-  var rootFolder = 'successImages'
-  var imgs = [
-    `${rootFolder}/cat_success.jpeg`,
-    `${rootFolder}/nyan.gif`
-  ]
-
+  var secondsPerImage = 20;
+  var images = JSON.parse('!{files}');
+ 
   function setRandomImage() {
-    var img = imgs[Math.floor(Math.random() * imgs.length)];
+    var img = images[Math.floor(Math.random() * images.length)];
     $("#successImage").attr("src", img);
   }
 
-  setRandomImage();
   $(document).ready(function(){
+    setRandomImage();
     setInterval (function() {
      setRandomImage();
-    }, 5000 );
+    }, secondsPerImage * 1000 );
   });
 
 .success-container
