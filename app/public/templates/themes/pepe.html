@@ -1,48 +1,51 @@
-<div class="list-theme">
-  <div class="list-container" data-bind="foreach: builds">
-    <div class="list-item" data-bind="{ animateCss: style }">
-      <div class="part-1">
+<div class="list-container" data-bind="foreach: builds">
+  <div class="build" data-bind="{ css: buildClass }">
+    <div class="project">
+      <span data-bind="text: project"></span>
+      <div data-bind="visible: definition">
+        <span data-bind="text: definition"></span>
+      </div>
+    </div>
+
+    <div class="build-info">
+      <div>
+        <span class="fa fa-cog"></span>
+        <span data-bind="text: reason"></span>
+        <span class="mono">#</span>
         <span data-bind="text: number"></span>
-        <span> | </span>
-        <span data-bind="text: project"></span>
-        <span data-bind="visible: definition">
-          <span> | </span>
-          <span data-bind="text: definition"></span>
-        </span>
-        <span> | </span>
+        <span>:</span>
         <span data-bind="text: statusText"></span>
       </div>
-      <div class="part-2">
-        <span class="fa fa-cog"></span>
-        <span> </span>
-        <span data-bind="text: reason"></span>
-        <span> | </span>
+      <div data-bind='if: requestedFor() !== "Unknown"'>
         <span class="fa fa-slideshare"></span>
         <span> Requested by </span>
         <span data-bind="text: requestedFor"></span>
-        <span> | </span>
+      </div>
+    </div>
+
+    <div class="build-info">
+      <div>
         <span class="fa fa-user"></span>
-        <span> Caused by </span>
-        <span data-bind="text: cause"></span>
-        <span> | </span>
+        <span data-bind="text: buildCause"></span>
+      </div>
+      <div>
         <span class="fa fa-users"></span>
-        <span> Commits by </span>
-        <span data-bind="text: commitsBy"></span>
+        <span data-bind="text: buildCommits"></span>
       </div>
-      <div class="part-3">
-        <span class="fa fa-clock-o"></span>
-        <span> </span>
-        <span data-bind="text: time"></span>
-        <span> and </span>
-        <span data-bind="text: duration"></span>
-        <span data-bind="visible: hasWarnings() || hasErrors()">
-          <span> | </span>
-          <span data-bind="visible: hasWarnings" class="fa fa-exclamation-triangle"></span>
-          <span> </span>
-          <span data-bind="visible: hasErrors" class="fa fa-times-circle"></span>
-        </span>
-      </div>
-      <div class="clear"></div>
+    </div>
+
+    <div class="time">
+      <span class="fa fa-clock-o"></span>
+      <span> </span>
+      <span data-bind="text: time"></span>
+      <span> and </span>
+      <span data-bind="text: duration"></span>
+    </div>
+    <div data-bind="visible: hasWarnings() || hasErrors()">
+      <span> | </span>
+      <span data-bind="visible: hasWarnings" class="fa fa-exclamation-triangle"></span>
+      <span> </span>
+      <span data-bind="visible: hasErrors" class="fa fa-times-circle"></span>
     </div>
   </div>
 </div>

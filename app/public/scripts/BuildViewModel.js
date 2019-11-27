@@ -57,6 +57,20 @@ define(['ko', 'moment', 'countdown'], function (ko, moment, countdown) {
             }
         }, this);
 
+        this.buildClass = ko.pureComputed(function() {
+          return this.statusText().toLowerCase();
+        }, this);
+
+        this.buildCause = ko.pureComputed(function() {
+          if(this.cause().startsWith('Started by')) return this.cause();
+          return `Caused by ${this.cause()}`;
+        }, this);
+
+        this.buildCommits = ko.pureComputed(function() {
+          if(this.commitsBy().startsWith('No one')) return 'No new commits';
+          return `Commits by ${this.commitsBy()}`;
+        }, this);
+
         this.time = ko.forcibleComputed(function () {
             return this.isRunning() ?
                 'started ' + moment(this.startedAt()).fromNow() :

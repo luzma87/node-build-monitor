@@ -1,47 +1,70 @@
-.list-theme .list-container {
-  font-size: 20pt;
-  padding: 30px;
-  color: white;
+.list-container {
+  --spacing: 24px;
+
+  display: grid;
+  grid-template-columns: repeat( auto-fill, minmax(900px, 1fr) );
+  grid-gap: var(--spacing);
+  padding: var(--spacing);
 }
 
-.list-theme .list-item {
-  margin-top: 15px;
-  padding: 10px;
+.build {
+  background: #4FC3F7;
+  color: #123f4a;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 16px;
+  font-size: 32pt;
+  font-weight: bold;
+}
+.build .fa {
+  color: #bbebff;
 }
 
-.list-theme .clear {
-  clear: both;
+.project {
+  text-align: center;
+  font-size: larger;
 }
 
-@media (min-width: 1400px) {
-  .list-theme .list-item {
-    right: 0;
-    text-align: center;
-  }
+.build-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
 
-  .list-theme .part-1, .list-theme .part-2, .list-theme .part-3 {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.time {
+}
 
-  .list-theme .part-1 {
-    text-align: left;
-    float: left;
-    width: 35%;
-  }
+.build.failure {
+  background: #B71C1C;
+  color: #d2aeaf;
+}
+.build.failure .fa {
+  color: #571515;
+}
 
-  .list-theme .part-2 {
-    display: inline-block;
-    text-align: center;
-    margin: 0 auto;
-    width: 30%;
-  }
+.build.success {
+  background: #4CAF50;
+  color: #0d360d;
+}
+.build.success .fa {
+  color: #54ea54;
+}
 
-  .list-theme .part-3 {
-    text-align: right;
-    float: right;
-    width: 35%;
-  }
+.build.unstable {
+  background: #FB8C00;
+  color: black;
+}
+
+.build.not_built {
+  background: #00BCD4;
+  color: #003743;
+}
+
+.build.aborted {
+  background: #BDBDBD;
+  color: #2d2d2d;
+}
+
+.build.aborted .fa {
+  color: #f5f5f5
 }
